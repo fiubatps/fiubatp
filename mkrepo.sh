@@ -8,13 +8,13 @@
 # (que debe existir en la organización); y TEAM_ID, el identificador
 # numérico correspondiente a ese equipo.
 #
-# La lista de repositorios a crear se obtiene de entrada estándar (un
-# nombre de repositorio por línea). Todos los repositorios se prefijan
+# La lista de repositorios a crear se obtiene de entrada estándar (en
+# formato "username repo_slug"). Todos los repositorios se prefijan
 # con el nombre del equipo y el año, por lo que con una entrada de:
 #
-#     _martinez
-#     c1_repo17
-#     c2_123456
+#     janemart _martinez
+#     johnrdoe c1_repo17
+#     perezsam c2_123456
 #
 # resultaría en los siguientes repositorios de Sistemas Operativos en
 # 2019:
@@ -58,13 +58,18 @@ put() {
     api PUT "$@"
 }
 
-while read repo; do
+while read user repo; do
     repo="${TEAM_SLUG}_${YEAR}${repo}"
     url="https://github.com/$ORG/$repo"
 
     # Crear el repositorio.
     post "orgs/$ORG/repos" name:="\"$repo\"" private:=true
 
-    # Dar acceso al equipo docente.
+    # Dar permisos al equipo docente. (En el futuro, si hay múltiples
+    # correctores, otorgar a este equipo acceso "push" en lugar de
+    # "admin", y crear un sub-equipo separado para administradores.)
     put "teams/$TEAM_ID/repos/$ORG/$repo" permission:='"admin"'
+
+    # Enviar la invitación.
+    put "repos/$ORG/$repo/collaborators/$user"
 done
