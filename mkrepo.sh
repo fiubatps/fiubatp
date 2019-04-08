@@ -22,6 +22,11 @@
 #     sisop_2019_martinez
 #     sisop_2019c1_repo17
 #     sisop_2019c2_123456
+#
+# Se pueden agregar múltiples colaboradores por repositorio separando,
+# en la primera columna del archivo, los nombres de usuario con comas:
+#
+#     janemart,johnrdoe  c1_doe_martinez
 
 set -eu
 
@@ -58,7 +63,7 @@ put() {
     api PUT "$@"
 }
 
-while read user repo; do
+while read users repo; do
     repo="${TEAM_SLUG}_${YEAR}${repo}"
     url="https://github.com/$ORG/$repo"
 
@@ -71,5 +76,7 @@ while read user repo; do
     put "teams/$TEAM_ID/repos/$ORG/$repo" permission:='"admin"'
 
     # Enviar la invitación.
-    put "repos/$ORG/$repo/collaborators/$user"
+    for user in $(echo $users | tr , ' '); do
+        put "repos/$ORG/$repo/collaborators/$user"
+    done
 done
