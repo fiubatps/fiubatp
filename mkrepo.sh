@@ -76,7 +76,11 @@ while read users repo; do
     url="https://github.com/$ORG/$repo"
 
     # Crear el repositorio.
-    post "orgs/$ORG/repos" name:="\"$repo\"" private:=true
+    post "orgs/$ORG/repos" name:="\"$repo\""   \
+                           private:=true       \
+                           has_wiki:=false     \
+                           allow_squash_merge:=false \
+                           allow_rebase_merge:=false
 
     # Dar permisos a los equipos docentes.
     if [[ -v ADM_ID ]]; then
