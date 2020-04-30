@@ -92,6 +92,6 @@ while read users repo; do
 
     # Enviar la invitación.
     for user in $(echo $users | tr , ' '); do
-        put "repos/$ORG/$repo/collaborators/$user"
+        put "repos/$ORG/$repo/collaborators/$user" permission:='"push"'
     done
 done
