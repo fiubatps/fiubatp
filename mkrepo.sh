@@ -30,13 +30,25 @@ set -eu
 ORG="fiubatps"
 API="https://api.github.com"
 
+# Template con el que inicializar los repos (rama master).
+# SKEL_REPO="$HOME/fisop/labs"
+# SKEL_REFSPEC="origin/master:refs/heads/master"
+
+# Orga: ramas adicionales que enviar desde el esqueleto.
+# SKEL_REPO="$HOME/orga/orgalabs"
+# SKEL_REFSPEC="origin/master:refs/heads/master origin/2020_1/lab1:refs/heads/lab1"
+
+# Algo 2: todas las ramas
+# SKEL_REPO="$HOME/fiuba/skel/algo2_alu_skel"
+# SKEL_REFSPEC="--all"
+
 # El identificador numérico de un equipo "eqx" se puede obtener con:
 #   http -a ... $API/orgs/$ORG/teams | jq '.[] | select(.slug == "eqx") | .id'
 
 ### Sistemas operativos ###
-ADM_ID=3581967  # sisop-adm
-DOC_ID=3581970  # sisop-20a
-DOC_SLUG="sisop-20a"
+# ADM_ID=3581967  # sisop-adm
+# DOC_ID=3581970  # sisop-20a
+# DOC_SLUG="sisop-20a"
 
 ### Organización del Computador ###
 # ADM_ID=3581979  # orga-adm
@@ -72,8 +84,14 @@ put() {
     api PUT "$@"
 }
 
+status_checks='null'
+push_restrictions='{"users": [], "teams": ["'"$DOC_SLUG"'"]}'
+required_pr_review='{"dismiss_stale_reviews": true, "require_code_owner_reviews": false, "dismissal_restrictions": {}}'
+
 while read users repo; do
-    url="https://github.com/$ORG/$repo"
+    url="https://nobody:$TOKEN@github.com/$ORG/$repo"
+
+    echo "############### $repo ###############"
 
     # Crear el repositorio.
     post "orgs/$ORG/repos" name:="\"$repo\""   \
@@ -88,6 +106,19 @@ while read users repo; do
         put "teams/$DOC_ID/repos/$ORG/$repo" permission:='"maintain"'
     else
         put "teams/$DOC_ID/repos/$ORG/$repo" permission:='"admin"'
+    fi
+
+    # Enviar el esqueleto.
+    if [ -n "${SKEL_REPO-}" ]; then
+        git -C "$SKEL_REPO" push "$url" ${SKEL_REFSPEC:-master:refs/heads/master}
+
+        # Proteger la rama master.
+        put "repos/$ORG/$repo/branches/master/protection" \
+            enforce_admins:=false                         \
+            allow_deletions:=false                        \
+            restrictions:="$push_restrictions"            \
+            required_status_checks:="$status_checks"      \
+            required_pull_request_reviews:="$required_pr_review"
     fi
 
     # Enviar la invitación.
