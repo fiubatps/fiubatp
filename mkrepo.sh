@@ -9,35 +9,25 @@
 # numérico correspondiente a ese equipo.
 #
 # La lista de repositorios a crear se obtiene de entrada estándar (en
-# formato "username repo_slug"). Todos los repositorios se prefijan
-# con el nombre del equipo y el año, por lo que con una entrada de:
+# formato "username repo_name"). Por ejemplo:
 #
-#     janemart _martinez
-#     johnrdoe c1_repo17
-#     perezsam c2_123456
-#
-# resultaría en los siguientes repositorios de Sistemas Operativos en
-# 2019:
-#
-#     sisop_2019_martinez
-#     sisop_2019c1_repo17
-#     sisop_2019c2_123456
+#     janemart  sisop_2019_martinez
+#     johnrdoe  sisop_2019c1_repo17
+#     perezsam  sisop_2019c2_123456
 #
 # Se pueden agregar múltiples colaboradores por repositorio separando,
 # en la primera columna del archivo, los nombres de usuario con comas:
 #
-#     janemart,johnrdoe  c1_doe_martinez
+#     janemart,johnrdoe  sisop_2019c1_doe_martinez
 
 set -eu
 
 ORG="fiubatps"
 API="https://api.github.com"
-YEAR=$(date +%Y)
 
 # El identificador numérico de un equipo "eqx" se puede obtener con:
 #   http -a ... $API/orgs/$ORG/teams | jq '.[] | select(.slug == "eqx") | .id'
 TEAM_ID=3141585
-TEAM_SLUG="sisop"
 
 # Autenticación (con API token) para el bot de la administración.
 USER="fiubatp"
@@ -64,7 +54,6 @@ put() {
 }
 
 while read users repo; do
-    repo="${TEAM_SLUG}_${YEAR}${repo}"
     url="https://github.com/$ORG/$repo"
 
     # Crear el repositorio.
