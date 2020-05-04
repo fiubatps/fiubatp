@@ -86,7 +86,9 @@ put() {
 
 status_checks='null'
 push_restrictions='{"users": [], "teams": ["'"$DOC_SLUG"'"]}'
-required_pr_review='{"dismiss_stale_reviews": true, "require_code_owner_reviews": false, "dismissal_restrictions": {}}'
+required_pr_review='{"dismiss_stale_reviews": true, "require_code_owner_reviews": true, "dismissal_restrictions": {}}'
+#required_pr_review='{"dismiss_stale_reviews": true, "required_approving_review_count": 1, "require_code_owner_reviews": false, "dismissal_restrictions": {}}'
+### status_checks='{"strict": false, "contexts": ["'"$CHECK_ID"'"]}'
 
 while read users repo; do
     url="https://nobody:$TOKEN@github.com/$ORG/$repo"
