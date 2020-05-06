@@ -1,13 +1,7 @@
-import { Application } from 'probot' // eslint-disable-line no-unused-vars
+import { Application } from "probot"
+import { handlePullRequest } from "./handler"
 
-export = (app: Application) => {
-    app.on('issues.opened', async (context) => {
-        const issueComment = context.issue({ body: 'Thanks for opening this issue!' })
-        await context.github.issues.createComment(issueComment)
-    })
-    // For more information on building apps:
-    // https://probot.github.io/docs/
-
-    // To get your app running against GitHub, see:
-    // https://probot.github.io/docs/development/
+export = (app: Application): void => {
+    app.on("pull_request.opened", handlePullRequest)
+    app.on("pull_request.ready_for_review", handlePullRequest)
 }
