@@ -1,0 +1,11 @@
+/.env
+/.key.pem
+*.pem
+!mock-cert.pem
+
+/node_modules
+/lib
+
+npm-debug.log
+yarn-error.log
+package-lock.json
