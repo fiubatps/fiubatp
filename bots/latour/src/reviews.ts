@@ -66,17 +66,21 @@ export async function fixTitle(context: Context): Promise<void> {
         }
         const lab = titleBad[1].toLocaleLowerCase()
         newTitle = `[${materia}] ${lab} – ${apellido}`
-        console.log(`found bad title "${pr.title}", replacing with "${newTitle}"`)
+        console.log(
+            `found bad title "${pr.title}", replacing with "${newTitle}"`
+        )
     } else if (!pr.title.includes(" ")) {
         const lab = pr.title.toLocaleLowerCase()
         newTitle = `[${materia}] ${lab} – ${apellido}`
         console.log(`could not parse "${pr.title}", using "${newTitle}"`)
     } else {
-        console.log(`could not parse multi-word "${pr.title}", refraining from action`)
+        console.log(
+            `could not parse multi-word "${pr.title}", refraining from action`
+        )
     }
 
     if (newTitle) {
-        const params = context.issue({title: newTitle})
+        const params = context.issue({ title: newTitle })
         const result = await context.github.pulls.update(params)
         console.log(result)
     }
