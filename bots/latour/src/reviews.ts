@@ -4,11 +4,12 @@ export interface Config {
     reviewers: { [key: string]: string }
 }
 
-export async function handlePullRequest(context: Context): Promise<void> {
-    const config = (await context.config("fiubatp.yml")) as Config
+export async function assignReview(context: Context): Promise<void> {
+    const file = "pullreq.yml"
+    const config = (await context.config(file)) as Config
 
     if (!config) {
-        throw new Error("no se encontró fiubatp.yml")
+        throw new Error(`no se encontró ${file}`)
     }
 
     const { reviewers } = config

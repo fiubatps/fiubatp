@@ -2516,7 +2516,7 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-probot@^9.5.3:
+probot@^9.11.3:
   version "9.11.3"
   resolved "https://registry.yarnpkg.com/probot/-/probot-9.11.3.tgz#ae3f3539ddd59675aaf4b795a516d0a6a49f9291"
   integrity sha512-pelYwGVfqTBokTfR7MnEyswdJfACo3ovZ+ZKlk5j7/kgiPOyXoe+aC2KLnfwahBTweaQU8SyYLsaXklthjklhA==
