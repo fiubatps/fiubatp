@@ -23,7 +23,7 @@ export async function assignReview(context: Context): Promise<void> {
         const params = context.issue({ reviewers: [reviewer] })
         const result = await context.github.pulls.createReviewRequest(params)
 
-        console.log(`assinging PR to to ${reviewers[reviewer]}`)
+        console.log(`assinging PR to to ${reviewer}`)
         console.log(result)
     }
 }
@@ -42,7 +42,7 @@ export async function fixTitle(context: Context): Promise<void> {
     }
 
     let materia = repoMatch[1]
-    let apellido = repo[3][0].toLocaleUpperCase() + repoMatch[3].slice(1)
+    let apellido = repoMatch[3][0].toLocaleUpperCase() + repoMatch[3].slice(1)
     let newTitle = null
 
     //  Comprobar si el título ya es correcto, o solo difiere en puntuación.
