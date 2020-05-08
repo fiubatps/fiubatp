@@ -32,47 +32,45 @@ export async function fixTitle(context: Context): Promise<void> {
     const pr = context.payload.pull_request
     const repo = context.payload.repository
 
+    // Comprobar que es un repo de entregas, y extraer metadata.
     const repoRegex: RegExp = /^(?<mat>algo2|orga|sisop)_[0-9]{4}[ab](?:_g([^_]+))?_(?<name>.+)/
+    const repoMatch = repoRegex.exec(repo.name)
+
+    if (!repoMatch) {
+        console.log(`fixTitle: ignoring ${repo.name}`)
+        return
+    }
+
+    let materia = repoMatch[1]
+    let apellido = repo[3][0].toLocaleUpperCase() + repoMatch[3].slice(1)
+    let newTitle = null
+
+    //  Comprobar si el título ya es correcto, o solo difiere en puntuación.
+    // Si no es correcto, aplicar una expresión regular para más o menos extraer
+    // el nombre de la entrega, y (si lo hay) el apellido.
     const goodTitle: RegExp = /^\[(?:algo2|orga|sisop)\] [a-z0-9]+ (?<guion>.) \S+$/
     const looseTitle: RegExp = /^(?:\[\w+\] *)?(?<tp>\w+)(?:(?: *\W+ *)?(?<name>\S+))?/
-
-    const repoMatch = repoRegex.exec(repo.name)
     const titleGood = goodTitle.exec(pr.title)
     const titleBad = looseTitle.exec(pr.title)
 
-    let mat = null
-    let lab = null
-    let name = null
-    let newTitle = null
-
-    if (titleBad) {
-        lab = titleBad[1].toLocaleLowerCase()
-        name = titleBad[2]
-    } else {
-        lab = pr.title.toLocaleLowerCase()
-    }
-
-    if (repoMatch) {
-        mat = repoMatch[1]
-        if (name == null || name == undefined)
-            name = repoMatch[3][0].toLocaleUpperCase() + repoMatch[3].slice(1)
-    }
-
-    if (!titleGood) {
-        if (titleBad && repoMatch) {
-            newTitle = `[${mat}] ${lab} – ${name}`
-            console.log(`found bad title "${pr.title}", replacing with "${newTitle}"`)
-        } else if (repoMatch) {
-            newTitle = `[${mat}] ${lab} – ${name}`
-            console.log(`did not find title, using "${newTitle}"`)
+    if (titleGood) {
+        if (titleGood[1] == "–") {
+            console.log(`"${pr.title}" is good!`)
         } else {
-            console.log(`${repo.name} did not match`)
+            newTitle = pr.title.replace(titleGood[1], "–")
+            console.log(`adjusting dash for "${pr.title}"`)
         }
-    } else if (titleGood[1] == "–") {
-        console.log(`"${pr.title}" is good!`)
+    } else if (titleBad) {
+        if (titleBad[2] != undefined) {
+            apellido = titleBad[2]
+        }
+        const lab = titleBad[1].toLocaleLowerCase()
+        newTitle = `[${materia}] ${lab} – ${apellido}`
+        console.log(`found bad title "${pr.title}", replacing with "${newTitle}"`)
     } else {
-        newTitle = pr.title.replace(titleGood[1], "–")
-        console.log(`adjusting dash for "${pr.title}"`)
+        const lab = pr.title.toLocaleLowerCase()
+        newTitle = `[${materia}] ${lab} – ${apellido}`
+        console.log(`could not parse "${pr.title}", using "${newTitle}"`)
     }
 
     if (newTitle) {
