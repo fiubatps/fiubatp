@@ -111,7 +111,7 @@ while read users repo; do
     fi
 
     # Enviar el esqueleto.
-    if [ -n "${SKEL_REPO-}" ]; then
+    if [[ -v SKEL_REPO ]]; then
         git -C "$SKEL_REPO" push "$url" ${SKEL_REFSPEC:-master:refs/heads/master}
 
         # Proteger la rama master.
