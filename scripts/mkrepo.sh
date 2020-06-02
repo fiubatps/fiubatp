@@ -5,13 +5,12 @@
 # admin.
 #
 # Se necesita solamente rellenar DOC_SLUG: el nombre del equipo docente
-# (que debe existir en la organización); y DOC_ID, el identificador
-# numérico correspondiente a ese equipo. A este equipo se le asigna
+# (que debe existir en la organización). A este equipo se le asigna
 # permiso de administración de los repositorios.
 #
-# Opcionalmente, se puede definir ADM_ID con otro identificador numérico
+# Opcionalmente, se puede definir también ADM_SLUG con otro nombre
 # de equipo. De estar definido, se asigna permiso de administración a
-# este equipo, y a DOC_ID se le asigna permiso "maintain".
+# este equipo, y a DOC_SLUG se le asigna permiso "maintain".
 #
 # La lista de repositorios a crear se obtiene de entrada estándar (en
 # formato "username repo_name"). Por ejemplo:
@@ -42,22 +41,16 @@ API="https://api.github.com"
 # SKEL_REPO="$HOME/fiuba/skel/algo2_alu_skel"
 # SKEL_REFSPEC="--all"
 
-# El identificador numérico de un equipo "eqx" se puede obtener con:
-#   http -a ... $API/orgs/$ORG/teams | jq '.[] | select(.slug == "eqx") | .id'
-
 ### Sistemas operativos ###
-# ADM_ID=3581967  # sisop-adm
-# DOC_ID=3581970  # sisop-20a
+# ADM_SLUG="sisop-adm"
 # DOC_SLUG="sisop-20a"
 
 ### Organización del Computador ###
-# ADM_ID=3581979  # orga-adm
-# DOC_ID=3581981  # orga-20a
+# ADM_SLUG="orga-adm"
 # DOC_SLUG="orga-20a"
 
 ### Algoritmos y Programación II ###
-# ADM_ID=3581963  # algorw-adm
-# DOC_ID=3581965  # algorw-20a
+# ADM_SLUG="algorw-adm"
 # DOC_SLUG="algorw-20a"
 
 # Autenticación (con API token) para el bot de la administración.
@@ -103,11 +96,11 @@ while read users repo; do
                            allow_rebase_merge:=false
 
     # Dar permisos a los equipos docentes.
-    if [[ -v ADM_ID ]]; then
-        put "teams/$ADM_ID/repos/$ORG/$repo" permission:='"admin"'
-        put "teams/$DOC_ID/repos/$ORG/$repo" permission:='"maintain"'
+    if [[ -v ADM_SLUG ]]; then
+        put "orgs/$ORG/teams/$ADM_SLUG/repos/$ORG/$repo" permission:='"admin"'
+        put "orgs/$ORG/teams/$DOC_SLUG/repos/$ORG/$repo" permission:='"maintain"'
     else
-        put "teams/$DOC_ID/repos/$ORG/$repo" permission:='"admin"'
+        put "orgs/$ORG/teams/$DOC_SLUG/repos/$ORG/$repo" permission:='"admin"'
     fi
 
     # Enviar el esqueleto.
