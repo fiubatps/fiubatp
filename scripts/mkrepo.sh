@@ -25,14 +25,16 @@
 #
 #     janemart,johnrdoe  sisop_2019c1_doe_martinez
 
-set -eu
+set -eux
 
 ORG="fiubatps"
 API="https://api.github.com"
 
-# Template con el que inicializar los repos (rama master).
-# SKEL_REPO="$HOME/fisop/labs"
-# SKEL_REFSPEC="origin/master:refs/heads/master"
+# Template con el que inicializar los repos (rama main).
+SKEL_REPO="./labs"
+SKEL_REFSPEC="main:refs/heads/main"
+#SKEL_REPO="./jos"
+#SKEL_REFSPEC="tp1:refs/heads/main"
 
 # Orga: ramas adicionales que enviar desde el esqueleto.
 # SKEL_REPO="$HOME/orga/orgalabs"
@@ -46,9 +48,14 @@ API="https://api.github.com"
 #   http -a ... $API/orgs/$ORG/teams | jq '.[] | select(.slug == "eqx") | .id'
 
 ### Sistemas operativos ###
-# ADM_ID=3581967  # sisop-adm
-# DOC_ID=3581970  # sisop-20a
-# DOC_SLUG="sisop-20a"
+ADM_ID=3581967  # sisop-adm
+#DOC_ID=3581970  # sisop-20a
+#DOC_SLUG="sisop-20a"
+#DOC_ID=4731728  # sisop-21a
+#DOC_SLUG="sisop-21a"
+
+DOC_ID=5090593 # sisop-21b
+DOC_SLUG="sisop-21b"
 
 ### Organización del Computador ###
 # ADM_ID=3581979  # orga-adm
@@ -62,7 +69,7 @@ API="https://api.github.com"
 
 # Autenticación (con API token) para el bot de la administración.
 USER="fiubatp"
-TOKEN=$(< ~/.fiubatp.tok)
+TOKEN=$(< .fiubatp.tok)
 
 api() {
       local verb="$1"; shift
@@ -101,7 +108,7 @@ while read users repo; do
                            allow_rebase_merge:=false
 
     # Dar permisos a los equipos docentes.
-    if [[ -v ADM_ID ]]; then
+    if [[ -n ADM_ID ]]; then
         put "teams/$ADM_ID/repos/$ORG/$repo" permission:='"admin"'
         put "teams/$DOC_ID/repos/$ORG/$repo" permission:='"maintain"'
     else
@@ -110,10 +117,10 @@ while read users repo; do
 
     # Enviar el esqueleto.
     if [ -n "${SKEL_REPO-}" ]; then
-        git -C "$SKEL_REPO" push "$url" ${SKEL_REFSPEC:-master:refs/heads/master}
+        git -C "$SKEL_REPO" push "$url" ${SKEL_REFSPEC:-main:refs/heads/main}
 
-        # Proteger la rama master.
-        put "repos/$ORG/$repo/branches/master/protection" \
+        # Proteger la rama main.
+        put "repos/$ORG/$repo/branches/main/protection" \
             enforce_admins:=false                         \
             allow_deletions:=false                        \
             restrictions:="$push_restrictions"            \
