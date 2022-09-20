@@ -34,7 +34,7 @@ API="https://api.github.com"
 SKEL_REPO="./labs"
 SKEL_REFSPEC="main:refs/heads/main"
 #SKEL_REPO="./jos"
-#SKEL_REFSPEC="tp1:refs/heads/main"
+#SKEL_REFSPEC="main:refs/heads/main"
 
 # Orga: ramas adicionales que enviar desde el esqueleto.
 # SKEL_REPO="$HOME/orga/orgalabs"
@@ -54,8 +54,11 @@ ADM_ID=3581967  # sisop-adm
 #DOC_ID=4731728  # sisop-21a
 #DOC_SLUG="sisop-21a"
 
-DOC_ID=5090593 # sisop-21b
-DOC_SLUG="sisop-21b"
+#DOC_ID=5845178 # sisop-22a
+#DOC_SLUG="sisop-22a"
+
+DOC_ID=6491595 # sisop-22b
+DOC_SLUG="sisop-22b"
 
 ### Organización del Computador ###
 # ADM_ID=3581979  # orga-adm
@@ -120,12 +123,12 @@ while read users repo; do
         git -C "$SKEL_REPO" push "$url" ${SKEL_REFSPEC:-main:refs/heads/main}
 
         # Proteger la rama main.
-        put "repos/$ORG/$repo/branches/main/protection" \
-            enforce_admins:=false                         \
-            allow_deletions:=false                        \
-            restrictions:="$push_restrictions"            \
-            required_status_checks:="$status_checks"      \
-            required_pull_request_reviews:="$required_pr_review"
+        #put "repos/$ORG/$repo/branches/main/protection" \
+        #    enforce_admins:=false                         \
+        #    allow_deletions:=false                        \
+        #    restrictions:="$push_restrictions"            \
+        #    required_status_checks:="$status_checks"      \
+        #    required_pull_request_reviews:="$required_pr_review"
     fi
 
     # Enviar la invitación.
