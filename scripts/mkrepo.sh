@@ -31,7 +31,7 @@ ORG="fiubatps"
 API="https://api.github.com"
 
 # Template con el que inicializar los repos (rama main).
-SKEL_REPO="./labs"
+SKEL_REPO="./.labs"
 SKEL_REFSPEC="main:refs/heads/main"
 #SKEL_REPO="./jos"
 #SKEL_REFSPEC="main:refs/heads/main"
@@ -49,14 +49,13 @@ SKEL_REFSPEC="main:refs/heads/main"
 
 ### Sistemas operativos ###
 ADM_ID=3581967  # sisop-adm
+
 #DOC_ID=3581970  # sisop-20a
 #DOC_SLUG="sisop-20a"
 #DOC_ID=4731728  # sisop-21a
 #DOC_SLUG="sisop-21a"
-
 #DOC_ID=5845178 # sisop-22a
 #DOC_SLUG="sisop-22a"
-
 DOC_ID=6491595 # sisop-22b
 DOC_SLUG="sisop-22b"
 
